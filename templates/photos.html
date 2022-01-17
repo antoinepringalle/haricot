@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block head %}
+    <style>
+        .file-link:link {
+            color: #404040;
+            text-decoration: none;
+        }
+        .file-link:visited {
+            color: #808080;
+            text-decoration: none;
+        }
+        .file-link:hover, .file-link:active, .file-link:focus {
+            color: #ff7d12;
+        }
+    </style>
+    <script>
+    function deleteAllDialog(amout) {
+        return confirm("Effacer " + amout + " photos ?")
+            && confirm("Tu es sûr·e de vouloir faire ça ?")
+            && confirm("Vraiment ? Il n'y a pas de retour possible ! Dernier avertissement.");
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div id="content" class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h1 mt-3 mb-0 text-gray-800">Photos</h1>
+        </div>
+
+        <p>Voici la liste des photos prises ({{ amount }})</p>
+
+        <!-- Button making a post method to /delete_photos -->
+        <form action="/delete_photos" method="post" onsubmit="return deleteAllDialog(this.amount.value)">
+            <input type="hidden" name="amount" value="{{ amount }}">
+            <button type="submit" class="btn btn-danger">Effacer toutes les photos</button>
+        </form>
+
+
+
+        <ul class="list-group">
+            {% if files %}
+                {% for file in files %}
+                <li class="list-group-item">
+                    <a class="link-primary" href="{{ (request.path + '/' if request.path != '/' else '') + file }}">
+                        {{ file }}
+                    </a>
+                </li>
+            {% endfor %}
+            {% else %}
+                <p class="font-italic">Aucune photo prise</p>
+            {% endif %}
+
+        </ul>
+    </div>
+{% endblock %}

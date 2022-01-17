@@ -1,0 +1,13 @@
+# Paths
+abs_path=/home/antoine/Documents/haricots
+photos_subfolder=/photos
+timelapse_subfolder=/timelapse
+
+# Hotspot
+hotspot_ssid=harico'
+hotspot_password=vert0000
+
+# Intervallometer
+hour_interval=0
+minute_interval=30
+second_interval=0

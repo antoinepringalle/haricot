@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="content" class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h1 mt-3 mb-0 text-gray-800">Configuration du Hotspot</h1>
+        </div>
+
+        <p>Le nom du Hotspot est <b>{{ ssid }}</b> et son mot de passe est <b>{{ password }}.</b></p>
+
+        <!-- italic font -->
+        <p class="font-italic">Il n'est actuellement pas possible de modifier ces valeurs.</div>
+{% endblock %}

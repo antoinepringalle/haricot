@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="content" class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h1 mt-3 mb-0 text-gray-800">Générateur de timelapse</h1>
+        </div>
+        <p class="mb-4">Génère ici ton timelapse à partir des photos déjà prises. Tu pourras ensuite télécharger la vidéo
+            créée pour la visionner.<br><b>Attention !</b> générer un timelapse écrasera le dernier timelapse, pense
+            à le télécharger si tu penses en avoir besoin plus tard</p>
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Accordion -->
+                <a href="#lastTimelapse" class="d-block card-header py-3" data-toggle="collapse"
+                   role="button" aria-expanded="true" aria-controls="lastTimelapse">
+                    <h6 class="m-0 font-weight-bold text-primary">Dernier timelapse généré</h6>
+                </a>
+                <!-- Card Content - Collapse -->
+                <div class="collapse hidden" id="lastTimelapse">
+                    <div class="card-body">
+                        {% if last_timelapse %}
+                            <p>Le dernier timelapse est <b>{{ last_timelapse }}</b></p>
+                        {% else %}
+                            <p class="italic">Aucun timelapse n'a encore été généré</p>
+                        {% endif %}
+                        <!-- bouton télécharger -->
+                        <a href="{{ last_timelapse }}" class="btn btn-primary btn-icon-split" download>
+                            <span class="icon text-white-50">
+                                <i class="fas fa-download"></i>
+                            </span>
+                            <span class="text">Télécharger</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card shadow mb-4">
+                <!-- Card Header - Accordion -->
+                <a href="#newTimelapse" class="d-block card-header py-3" data-toggle="collapse"
+                   role="button" aria-expanded="true" aria-controls="newTimelapse">
+                    <h6 class="m-0 font-weight-bold text-primary">Créer un nouveau timelapse</h6>
+                </a>
+                <!-- Card Content - Collapse -->
+                <div class="collapse show card-body" id="newTimelapse">
+                    <form action="" method="POST">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="timelapse_name">Nom du fichier</label>
+                                    <input type="text" class="form-control" name="timelapse_name"
+                                           placeholder="Nom de mon timelapse" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="timelapse_fps">FPS (images par seconde)</label>
+                                    <input type="number" class="form-control" name="timelapse_fps"
+                                           value="24" min="1" max="30" placeholder="24" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label for="timelapse_interpolation">Faire de l'interpolation d'image (⚠ rajoute du flou)</label>
+                                    <input type="checkbox" class="form-control" name="timelapse_interpolation">
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Button send form -->
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <button type="submit" class="form-control">Générer le timelapse</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

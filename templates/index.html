@@ -1,0 +1,138 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div id="content" class="container-fluid">
+        <!-- Page Heading -->
+        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+            <h1 class="h1 mt-3 mb-0 text-gray-800">Dashboard</h1>
+        </div>
+
+        <div class="row">
+            <!-- Time left -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-bottom-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Temps avant la prochaine photo</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="timer">{{ timer }}</span> secondes</div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-hourglass-half fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Amount photos -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-bottom-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Nombre de photos prises</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="count">{{ count }}</span></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="far fa-images fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Space left -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-bottom-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Espace mémoire disponible</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="memory_left">{{ memory_left }} Go</span></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-sd-card fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Time elapsed -->
+            <div class="col-xl-3 col-md-6 mb-4">
+                <div class="card border-bottom-primary shadow h-100 py-2">
+                    <div class="card-body">
+                        <div class="row no-gutters align-items-center">
+                            <div class="col mr-2">
+                                <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                    Temps écoulé</div>
+                                <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="time_elapsed">{{ time_elapsed }}</span></div>
+                            </div>
+                            <div class="col-auto">
+                                <i class="fas fa-clock fa-2x text-gray-300"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <div class="card shadow mb-4">
+                <!-- Card Header - Accordion -->
+                <a href="#collapseCardExample" class="d-block card-header py-3" data-toggle="collapse"
+                    role="button" aria-expanded="true" aria-controls="collapseCardExample">
+                    <h6 class="m-0 font-weight-bold text-primary">Dernière photo</h6>
+                </a>
+                <!-- Card Content - Collapse -->
+                <div class="collapse show" id="collapseCardExample">
+                    <div class="card-body">
+                        {% if last_modified %}
+                            <img id='last-picture' src="{{ last_modified }}" style="width: 100%">
+                        {% else %}
+                            <p class="font-italic">Aucune photo prise</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block endscript %}
+    let timer = document.getElementById('timer');
+    let count = document.getElementById('count');
+    let last_picture = document.getElementById("last-picture");
+    const zeroPad = (num, places) => String(num).padStart(places, '0')
+    let seconds = parseInt(timer.innerHTML);
+    function countdown() {
+        if (seconds < 0) {
+            seconds = {{ timeout }};
+            count.innerHTML = parseInt(count.innerHTML) + 1;
+            let new_pic = "{{ filename_template }}";
+            new_pic = new_pic.replace('filename', zeroPad(parseInt(count.innerHTML), 4));
+            last_picture.setAttribute("src", new_pic);
+        }
+        timer.innerHTML = seconds--;
+        setTimeout("countdown()", 1000);
+    }
+    countdown();
+
+    let time_elapsed = document.getElementById('time_elapsed');
+    let [hour_elapsed, min_elapsed, sec_elapsed] = time_elapsed.innerHTML.split(' ').map(e => {return parseInt(e.slice(0,-1))});
+    function timeElapsed() {
+        sec_elapsed++;
+        if (sec_elapsed >= 60) {
+            min_elapsed++;
+            sec_elapsed = 0;
+        }
+        if (min_elapsed >= 60) {
+            hour_elapsed++;
+            min_elapsed = 0;
+        }
+        time_elapsed.innerHTML = hour_elapsed + "h " + min_elapsed  + "m " + sec_elapsed + "s";
+        setTimeout("timeElapsed()", 1000);
+    }
+    timeElapsed();
+{% endblock %}
